@@ -1120,16 +1120,17 @@ diff -urN -r --strip-trailing-cr ../src_base/minecraft/net/minecraft/src/EntityP
 diff -urN -r --strip-trailing-cr ../src_base/minecraft/net/minecraft/src/EntityRenderer.java ../src_work/minecraft/net/minecraft/src/EntityRenderer.java
 --- ../src_base/minecraft/net/minecraft/src/EntityRenderer.java	2021-01-02 01:05:04.683044300 -0800
 +++ ../src_work/minecraft/net/minecraft/src/EntityRenderer.java	2021-01-02 15:55:00.413789400 -0800
-@@ -3,6 +3,8 @@
+@@ -3,6 +3,9 @@
  // Decompiler options: packimports(3) braces deadcode 
  
  package net.minecraft.src;
 +import net.minecraft.src.forge.ForgeHooksClient;
 +import net.minecraft.src.reforged.Reforged;
++import net.minecraft.src.reforged.ReforgedHooksClient;
  
  import java.nio.FloatBuffer;
  import java.util.List;
-@@ -106,46 +108,45 @@
+@@ -106,46 +109,45 @@
              d1 = d = 32D;
          } else
          {
@@ -1201,7 +1202,7 @@ diff -urN -r --strip-trailing-cr ../src_base/minecraft/net/minecraft/src/EntityR
              }
          }
  
-@@ -573,8 +574,12 @@
+@@ -573,8 +575,12 @@
              {
                  EntityPlayer entityplayer = (EntityPlayer)entityliving;
                  GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
@@ -1214,7 +1215,7 @@ diff -urN -r --strip-trailing-cr ../src_base/minecraft/net/minecraft/src/EntityR
                  GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
              }
              GL11.glBlendFunc(770, 771);
-@@ -619,8 +624,12 @@
+@@ -619,18 +625,25 @@
              {
                  EntityPlayer entityplayer1 = (EntityPlayer)entityliving;
                  GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
@@ -1227,6 +1228,19 @@ diff -urN -r --strip-trailing-cr ../src_base/minecraft/net/minecraft/src/EntityR
                  GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
              }
              renderRainSnow(f);
+             GL11.glDisable(2912 /*GL_FOG*/);
+             if(pointedEntity == null);
++		GL11.glPushMatrix();
+             setupFog(0, f);
+             GL11.glEnable(2912 /*GL_FOG*/);
+             renderglobal.renderClouds(f);
+             GL11.glDisable(2912 /*GL_FOG*/);
+             setupFog(1, f);
++		GL11.glPopMatrix();
++		ReforgedHooksClient.onRenderWorldLast(renderglobal,f);
+             if(cameraZoom == 1.0D)
+             {
+                 GL11.glClear(256);
 diff -urN -r --strip-trailing-cr ../src_base/minecraft/net/minecraft/src/EntitySheep.java ../src_work/minecraft/net/minecraft/src/EntitySheep.java
 --- ../src_base/minecraft/net/minecraft/src/EntitySheep.java	2021-01-02 01:05:04.697045000 -0800
 +++ ../src_work/minecraft/net/minecraft/src/EntitySheep.java	2021-01-02 13:42:02.910502400 -0800
